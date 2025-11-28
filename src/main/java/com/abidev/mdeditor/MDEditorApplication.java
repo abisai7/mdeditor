@@ -5,28 +5,23 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class MDEditorApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MDEditorApplication.class.getResource("markdown-editor-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
-
-        // Obtener el controlador para manejar el cierre
-        MarkdownEditorController controller = fxmlLoader.getController();
-
-        // Establecer título inicial
-        stage.setTitle("Sin título - Editor de Markdown");
+    public void start(Stage stage) throws Exception {
+        Locale locale = Locale.getDefault();
+        ResourceBundle bundle = ResourceBundle.getBundle("com.abidev.mdeditor.messages", locale);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/abidev/mdeditor/markdown-editor-view.fxml"), bundle);
+        Scene scene = new Scene(loader.load(), 1200, 700);
         stage.setScene(scene);
-
-        // Interceptar el evento de cierre de ventana
-        stage.setOnCloseRequest(event -> {
-            if (!controller.confirmClose()) {
-                event.consume(); // Cancelar el cierre si el usuario cancela
-            }
-        });
-
+        String titleBase = bundle.getString("app.title.base");
+        stage.setTitle(titleBase);
         stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

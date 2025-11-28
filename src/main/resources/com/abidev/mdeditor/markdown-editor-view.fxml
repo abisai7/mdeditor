@@ -8,35 +8,36 @@
             fx:controller="com.abidev.mdeditor.MarkdownEditorController"
             prefHeight="700.0" prefWidth="1200.0">
     <top>
-        <!-- Reemplazamos MenuBar directo por VBox con menú y barra de herramientas -->
         <VBox spacing="2">
-            <!-- Barra de menú -->
             <MenuBar>
-                <Menu text="Archivo">
-                    <MenuItem text="Nuevo" onAction="#handleNew"/>
-                    <MenuItem text="Abrir..." onAction="#handleOpen"/>
-                    <MenuItem text="Guardar" onAction="#handleSave"/>
-                    <MenuItem text="Guardar Como..." onAction="#handleSaveAs"/>
+                <Menu text="%menu.file">
+                    <MenuItem text="%file.new" onAction="#handleNew"/>
+                    <MenuItem text="%file.open" onAction="#handleOpen"/>
+                    <MenuItem text="%file.save" onAction="#handleSave"/>
+                    <MenuItem text="%file.saveAs" onAction="#handleSaveAs"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Exportar a HTML..." onAction="#handleExportHTML"/>
+                    <MenuItem text="%file.exportHtml" onAction="#handleExportHTML"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Salir" onAction="#handleExit"/>
+                    <MenuItem text="%file.exit" onAction="#handleExit"/>
                 </Menu>
-                <Menu text="Editar">
-                    <MenuItem text="Deshacer" onAction="#handleUndo" accelerator="Ctrl+Z"/>
-                    <MenuItem text="Rehacer" onAction="#handleRedo" accelerator="Ctrl+Y"/>
+                <Menu text="%menu.edit">
+                    <MenuItem text="%edit.undo" onAction="#handleUndo" accelerator="Ctrl+Z"/>
+                    <MenuItem text="%edit.redo" onAction="#handleRedo" accelerator="Ctrl+Y"/>
+                </Menu>
+                <Menu text="%menu.language">
+                    <MenuItem text="%language.es" onAction="#handleLanguageEs" />
+                    <MenuItem text="%language.en" onAction="#handleLanguageEn" />
                 </Menu>
             </MenuBar>
-            <!-- Barra de herramientas de formato -->
             <ToolBar>
-                <Label text="Encabezado:" />
+                <Label text="%toolbar.heading" />
                 <ChoiceBox fx:id="headingChoice" />
                 <Separator />
-                <Button text="Undo" onAction="#handleUndo">
-                    <tooltip><Tooltip text="Deshacer (Ctrl+Z)"/></tooltip>
+                <Button text="%edit.undo" onAction="#handleUndo">
+                    <tooltip><Tooltip text="%tooltip.undo"/></tooltip>
                 </Button>
-                <Button text="Redo" onAction="#handleRedo">
-                    <tooltip><Tooltip text="Rehacer (Ctrl+Y)"/></tooltip>
+                <Button text="%edit.redo" onAction="#handleRedo">
+                    <tooltip><Tooltip text="%tooltip.redo"/></tooltip>
                 </Button>
                 <Separator />
                 <Button text="B" onAction="#handleBold" style="-fx-font-weight: bold;">
@@ -82,12 +83,12 @@
         <SplitPane dividerPositions="0.5">
             <items>
                 <VBox spacing="5">
-                    <Label text="Editor" style="-fx-font-weight: bold; -fx-padding: 5;"/>
+                    <Label text="%label.editor" style="-fx-font-weight: bold; -fx-padding: 5;"/>
                     <TextArea fx:id="markdownEditor" wrapText="true" VBox.vgrow="ALWAYS"
                               style="-fx-font-family: 'Consolas', 'Courier New', monospace; -fx-font-size: 13px;"/>
                 </VBox>
                 <VBox spacing="5">
-                    <Label text="Vista Previa" style="-fx-font-weight: bold; -fx-padding: 5;"/>
+                    <Label text="%label.preview" style="-fx-font-weight: bold; -fx-padding: 5;"/>
                     <WebView fx:id="markdownPreview" VBox.vgrow="ALWAYS"/>
                 </VBox>
             </items>
@@ -95,7 +96,7 @@
     </center>
     <bottom>
         <HBox style="-fx-padding: 5; -fx-background-color: #f0f0f0;">
-            <Label text="Editor de Markdown - Listo"/>
+            <Label text="%status.ready"/>
         </HBox>
     </bottom>
 </BorderPane>
