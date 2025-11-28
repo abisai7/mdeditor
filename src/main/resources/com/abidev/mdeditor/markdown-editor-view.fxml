@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.abidev.mdeditor.MarkdownEditorController"
+            prefHeight="700.0" prefWidth="1200.0">
+    <top>
+        <!-- Reemplazamos MenuBar directo por VBox con menú y barra de herramientas -->
+        <VBox spacing="2">
+            <!-- Barra de menú -->
+            <MenuBar>
+                <Menu text="Archivo">
+                    <MenuItem text="Nuevo" onAction="#handleNew"/>
+                    <MenuItem text="Abrir..." onAction="#handleOpen"/>
+                    <MenuItem text="Guardar" onAction="#handleSave"/>
+                    <MenuItem text="Guardar Como..." onAction="#handleSaveAs"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Exportar a HTML..." onAction="#handleExportHTML"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Salir" onAction="#handleExit"/>
+                </Menu>
+                <Menu text="Editar">
+                    <MenuItem text="Deshacer" onAction="#handleUndo" accelerator="Ctrl+Z"/>
+                    <MenuItem text="Rehacer" onAction="#handleRedo" accelerator="Ctrl+Y"/>
+                </Menu>
+            </MenuBar>
+            <!-- Barra de herramientas de formato -->
+            <ToolBar>
+                <Label text="Encabezado:" />
+                <ChoiceBox fx:id="headingChoice" />
+                <Separator />
+                <Button text="Undo" onAction="#handleUndo">
+                    <tooltip><Tooltip text="Deshacer (Ctrl+Z)"/></tooltip>
+                </Button>
+                <Button text="Redo" onAction="#handleRedo">
+                    <tooltip><Tooltip text="Rehacer (Ctrl+Y)"/></tooltip>
+                </Button>
+                <Separator />
+                <Button text="B" onAction="#handleBold" style="-fx-font-weight: bold;">
+                    <tooltip><Tooltip text="Negrita"/></tooltip>
+                </Button>
+                <Button text="I" onAction="#handleItalic" style="-fx-font-style: italic;">
+                    <tooltip><Tooltip text="Cursiva"/></tooltip>
+                </Button>
+                <Button text="S" onAction="#handleStrikethrough">
+                    <tooltip><Tooltip text="Tachado"/></tooltip>
+                </Button>
+                <Button text="U" onAction="#handleUnderline">
+                    <tooltip><Tooltip text="Subrayado"/></tooltip>
+                </Button>
+                <Button text="Code" onAction="#handleInlineCode">
+                    <tooltip><Tooltip text="Código en línea"/></tooltip>
+                </Button>
+                <Button text=">" onAction="#handleBlockquote">
+                    <tooltip><Tooltip text="Cita"/></tooltip>
+                </Button>
+                <Button text="UL" onAction="#handleUnorderedList">
+                    <tooltip><Tooltip text="Lista con viñetas"/></tooltip>
+                </Button>
+                <Button text="OL" onAction="#handleOrderedList">
+                    <tooltip><Tooltip text="Lista numerada"/></tooltip>
+                </Button>
+                <Button text="Bloc" onAction="#handleCodeBlock">
+                    <tooltip><Tooltip text="Bloque de código"/></tooltip>
+                </Button>
+                <Button text="Link" onAction="#handleLink">
+                    <tooltip><Tooltip text="Insertar enlace"/></tooltip>
+                </Button>
+                <Button text="Img" onAction="#handleImage">
+                    <tooltip><Tooltip text="Insertar imagen"/></tooltip>
+                </Button>
+                <Button text="HR" onAction="#handleHorizontalRule">
+                    <tooltip><Tooltip text="Regla horizontal"/></tooltip>
+                </Button>
+            </ToolBar>
+        </VBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.5">
+            <items>
+                <VBox spacing="5">
+                    <Label text="Editor" style="-fx-font-weight: bold; -fx-padding: 5;"/>
+                    <TextArea fx:id="markdownEditor" wrapText="true" VBox.vgrow="ALWAYS"
+                              style="-fx-font-family: 'Consolas', 'Courier New', monospace; -fx-font-size: 13px;"/>
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Vista Previa" style="-fx-font-weight: bold; -fx-padding: 5;"/>
+                    <WebView fx:id="markdownPreview" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+    <bottom>
+        <HBox style="-fx-padding: 5; -fx-background-color: #f0f0f0;">
+            <Label text="Editor de Markdown - Listo"/>
+        </HBox>
+    </bottom>
+</BorderPane>
