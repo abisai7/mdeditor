@@ -20,9 +20,12 @@ import java.util.ResourceBundle;
 
 public class MarkdownEditorController {
 
-    @FXML private TextArea markdownEditor;
-    @FXML private WebView markdownPreview;
-    @FXML private ChoiceBox<String> headingChoice;
+    @FXML
+    private TextArea markdownEditor;
+    @FXML
+    private WebView markdownPreview;
+    @FXML
+    private ChoiceBox<String> headingChoice;
 
     private File currentFile;
     private final Parser parser = Parser.builder().build();
@@ -32,7 +35,8 @@ public class MarkdownEditorController {
     private boolean suppressHistory = false;
     private boolean isDirty = false;
 
-    @FXML private ResourceBundle resources;
+    @FXML
+    private ResourceBundle resources;
 
     @FXML
     public void initialize() {
@@ -55,27 +59,7 @@ public class MarkdownEditorController {
         }
 
         // Mostrar un mensaje de bienvenida inicial
-        String welcomeMessage = "# Editor de Markdown\n\n" +
-                "¡Bienvenido al editor de Markdown!\n\n" +
-                "## Características\n\n" +
-                "- Edición en tiempo real\n" +
-                "- Vista previa en vivo\n" +
-                "- Abrir y guardar archivos .md\n\n" +
-                "## Cómo usar\n\n" +
-                "1. **Nuevo**: Crea un nuevo documento\n" +
-                "2. **Abrir**: Abre un archivo .md existente\n" +
-                "3. **Guardar**: Guarda el documento actual\n" +
-                "4. **Guardar Como**: Guarda el documento con un nuevo nombre\n\n" +
-                "### Sintaxis Markdown básica\n\n" +
-                "- `# Título` - Encabezado nivel 1\n" +
-                "- `## Subtítulo` - Encabezado nivel 2\n" +
-                "- `**negrita**` - **Texto en negrita**\n" +
-                "- `*cursiva*` - *Texto en cursiva*\n" +
-                "- `[enlace](url)` - Crear un enlace\n" +
-                "- `- item` - Lista con viñetas\n" +
-                "- `1. item` - Lista numerada\n" +
-                "- `` `código` `` - Código en línea\n\n" +
-                "¡Comienza a escribir!";
+        String welcomeMessage = resources.getString("welcome.message");
 
         suppressHistory = true; // evitar registrar mensaje inicial en historial
         markdownEditor.setText(welcomeMessage);
@@ -90,31 +74,31 @@ public class MarkdownEditorController {
             var document = parser.parse(markdown);
             String html = renderer.render(document);
             String styledHtml = """
-                <html>
-                <head>
-                    <style>
-                        body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;}
-                        h1, h2, h3, h4, h5, h6 {margin-top: 24px; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}
-                        h1 { font-size: 2em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
-                        h2 { font-size: 1.5em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
-                        h3 { font-size: 1.25em; }
-                        code { background-color: #f6f8fa; border-radius: 3px; padding: 0.2em 0.4em; font-family: 'Courier New', monospace; }
-                        pre { background-color: #f6f8fa; border-radius: 3px; padding: 16px; overflow: auto; }
-                        blockquote { border-left: 4px solid #dfe2e5; padding-left: 16px; color: #6a737d; }
-                        ul, ol { padding-left: 2em; }
-                        a { color: #0366d6; text-decoration: none; }
-                        a:hover { text-decoration: underline; }
-                        em { font-style: italic; }
-                        strong { font-weight: bold; }
-                        del { color: #555; }
-                        u { text-decoration: underline; }
-                    </style>
-                </head>
-                <body>
-                """ + html + """
-                </body>
-                </html>
-                """;
+                    <html>
+                    <head>
+                        <style>
+                            body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;}
+                            h1, h2, h3, h4, h5, h6 {margin-top: 24px; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}
+                            h1 { font-size: 2em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+                            h2 { font-size: 1.5em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+                            h3 { font-size: 1.25em; }
+                            code { background-color: #f6f8fa; border-radius: 3px; padding: 0.2em 0.4em; font-family: 'Courier New', monospace; }
+                            pre { background-color: #f6f8fa; border-radius: 3px; padding: 16px; overflow: auto; }
+                            blockquote { border-left: 4px solid #dfe2e5; padding-left: 16px; color: #6a737d; }
+                            ul, ol { padding-left: 2em; }
+                            a { color: #0366d6; text-decoration: none; }
+                            a:hover { text-decoration: underline; }
+                            em { font-style: italic; }
+                            strong { font-weight: bold; }
+                            del { color: #555; }
+                            u { text-decoration: underline; }
+                        </style>
+                    </head>
+                    <body>
+                    """ + html + """
+                    </body>
+                    </html>
+                    """;
             markdownPreview.getEngine().loadContent(styledHtml);
         } catch (Exception e) {
             e.printStackTrace();
@@ -196,18 +180,65 @@ public class MarkdownEditorController {
         markdownEditor.selectRange(lineStart, lineStart + replaced.length());
     }
 
-    @FXML private void handleBold() { wrapSelectionWithHistory("**", "**"); }
-    @FXML private void handleItalic() { wrapSelectionWithHistory("*", "*"); }
-    @FXML private void handleStrikethrough() { wrapSelectionWithHistory("~~", "~~"); }
-    @FXML private void handleUnderline() { wrapSelectionWithHistory("<u>", "</u>"); }
-    @FXML private void handleInlineCode() { wrapSelectionWithHistory("`", "`"); }
-    @FXML private void handleBlockquote() { prefixSelectedLinesWithHistory("> "); }
-    @FXML private void handleUnorderedList() { prefixSelectedLinesWithHistory("- "); }
-    @FXML private void handleOrderedList() { numberSelectedLinesWithHistory(); }
-    @FXML private void handleCodeBlock() { wrapSelectionWithHistory("\n```\n", "\n```\n"); }
-    @FXML private void handleLink() { wrapSelectionWithHistory("[", "](https://)"); }
-    @FXML private void handleImage() { wrapSelectionWithHistory("![", "](https://ruta/imagen.png)"); }
-    @FXML private void handleHorizontalRule() { wrapSelectionWithHistory("\n---\n", ""); }
+    @FXML
+    private void handleBold() {
+        wrapSelectionWithHistory("**", "**");
+    }
+
+    @FXML
+    private void handleItalic() {
+        wrapSelectionWithHistory("*", "*");
+    }
+
+    @FXML
+    private void handleStrikethrough() {
+        wrapSelectionWithHistory("~~", "~~");
+    }
+
+    @FXML
+    private void handleUnderline() {
+        wrapSelectionWithHistory("<u>", "</u>");
+    }
+
+    @FXML
+    private void handleInlineCode() {
+        wrapSelectionWithHistory("`", "`");
+    }
+
+    @FXML
+    private void handleBlockquote() {
+        prefixSelectedLinesWithHistory("> ");
+    }
+
+    @FXML
+    private void handleUnorderedList() {
+        prefixSelectedLinesWithHistory("- ");
+    }
+
+    @FXML
+    private void handleOrderedList() {
+        numberSelectedLinesWithHistory();
+    }
+
+    @FXML
+    private void handleCodeBlock() {
+        wrapSelectionWithHistory("\n```\n", "\n```\n");
+    }
+
+    @FXML
+    private void handleLink() {
+        wrapSelectionWithHistory("[", "](https://)");
+    }
+
+    @FXML
+    private void handleImage() {
+        wrapSelectionWithHistory("![", "](https://ruta/imagen.png)");
+    }
+
+    @FXML
+    private void handleHorizontalRule() {
+        wrapSelectionWithHistory("\n---\n", "");
+    }
 
     private void wrapSelectionWithHistory(String before, String after) {
         String beforeText = markdownEditor.getText();
@@ -229,6 +260,7 @@ public class MarkdownEditorController {
         undoStack.push(beforeText);
         redoStack.clear();
     }
+
     private void numberSelectedLines() {
         var selection = markdownEditor.getSelection();
         int start = selection.getStart();
@@ -327,12 +359,20 @@ public class MarkdownEditorController {
         }
     }
 
+    private String getWindowTitle() {
+        Stage stage = getStage();
+        return stage != null ? stage.getTitle() : "Editor de Markdown";
+    }
+
     // Cambio de idioma: ES
-    @FXML private void handleLanguageEs() {
+    @FXML
+    private void handleLanguageEs() {
         switchLanguage(new Locale("es"));
     }
+
     // Cambio de idioma: EN
-    @FXML private void handleLanguageEn() {
+    @FXML
+    private void handleLanguageEn() {
         switchLanguage(Locale.ENGLISH);
     }
 
@@ -410,7 +450,7 @@ public class MarkdownEditorController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(resources.getString("fileChooser.open.title"));
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Archivos Markdown", "*.md", "*.markdown", "*.txt")
+                new FileChooser.ExtensionFilter("Archivos Markdown", "*.md", "*.markdown", "*.txt")
         );
         java.io.File file = fileChooser.showOpenDialog(getStage());
         if (file != null) {
@@ -443,7 +483,7 @@ public class MarkdownEditorController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(resources.getString("fileChooser.save.title"));
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Archivos Markdown", "*.md")
+                new FileChooser.ExtensionFilter("Archivos Markdown", "*.md")
         );
         if (currentFile == null) {
             fileChooser.setInitialFileName("document.md");
@@ -465,7 +505,7 @@ public class MarkdownEditorController {
     private void saveToFile(java.io.File file) {
         try {
             java.nio.file.Files.writeString(file.toPath(), markdownEditor.getText(),
-                java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
+                    java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
             markClean();
             updateWindowTitle();
             showInfo(java.text.MessageFormat.format(resources.getString("info.saved"), file.getName()));
@@ -479,7 +519,7 @@ public class MarkdownEditorController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(resources.getString("fileChooser.export.title"));
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Archivos HTML", "*.html")
+                new FileChooser.ExtensionFilter("Archivos HTML", "*.html")
         );
         if (currentFile != null) {
             String baseName = currentFile.getName().replaceFirst("[.][^.]+$", "");
@@ -493,20 +533,38 @@ public class MarkdownEditorController {
                 var document = parser.parse(markdownEditor.getText());
                 String html = renderer.render(document);
                 String fullHtml = """
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <meta charset=\"UTF-8\">
-                        <title>Documento Markdown</title>
-                        <style>/* estilos */</style>
-                    </head>
-                    <body>
-                    """ + html + """
-                    </body>
-                    </html>
-                    """;
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset=\"UTF-8\">
+                            <title>
+                        """ + getWindowTitle() + """
+                            </title>
+                            <style>
+                            body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;}
+                            h1, h2, h3, h4, h5, h6 {margin-top: 24px; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}
+                            h1 { font-size: 2em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+                            h2 { font-size: 1.5em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
+                            h3 { font-size: 1.25em; }
+                            code { background-color: #f6f8fa; border-radius: 3px; padding: 0.2em 0.4em; font-family: 'Courier New', monospace; }
+                            pre { background-color: #f6f8fa; border-radius: 3px; padding: 16px; overflow: auto; }
+                            blockquote { border-left: 4px solid #dfe2e5; padding-left: 16px; color: #6a737d; }
+                            ul, ol { padding-left: 2em; }
+                            a { color: #0366d6; text-decoration: none; }
+                            a:hover { text-decoration: underline; }
+                            em { font-style: italic; }
+                            strong { font-weight: bold; }
+                            del { color: #555; }
+                            u { text-decoration: underline; }
+                        </style>
+                        </head>
+                        <body>
+                        """ + html + """
+                        </body>
+                        </html>
+                        """;
                 java.nio.file.Files.writeString(file.toPath(), fullHtml,
-                    java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
+                        java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
                 showInfo(java.text.MessageFormat.format(resources.getString("info.exported"), file.getName()));
             } catch (IOException e) {
                 showError(resources.getString("error.export.title"), e.getMessage());

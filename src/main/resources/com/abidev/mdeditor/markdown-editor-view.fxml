@@ -41,40 +41,40 @@
                 </Button>
                 <Separator />
                 <Button text="B" onAction="#handleBold" style="-fx-font-weight: bold;">
-                    <tooltip><Tooltip text="Negrita"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.bold"/></tooltip>
                 </Button>
                 <Button text="I" onAction="#handleItalic" style="-fx-font-style: italic;">
-                    <tooltip><Tooltip text="Cursiva"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.italic"/></tooltip>
                 </Button>
                 <Button text="S" onAction="#handleStrikethrough">
-                    <tooltip><Tooltip text="Tachado"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.strikethrough"/></tooltip>
                 </Button>
                 <Button text="U" onAction="#handleUnderline">
-                    <tooltip><Tooltip text="Subrayado"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.underline"/></tooltip>
                 </Button>
                 <Button text="Code" onAction="#handleInlineCode">
-                    <tooltip><Tooltip text="Código en línea"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.inlineCode"/></tooltip>
                 </Button>
                 <Button text=">" onAction="#handleBlockquote">
-                    <tooltip><Tooltip text="Cita"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.blockquote"/></tooltip>
                 </Button>
                 <Button text="UL" onAction="#handleUnorderedList">
-                    <tooltip><Tooltip text="Lista con viñetas"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.unorderedList"/></tooltip>
                 </Button>
                 <Button text="OL" onAction="#handleOrderedList">
-                    <tooltip><Tooltip text="Lista numerada"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.orderedList"/></tooltip>
                 </Button>
                 <Button text="Bloc" onAction="#handleCodeBlock">
-                    <tooltip><Tooltip text="Bloque de código"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.codeBlock"/></tooltip>
                 </Button>
                 <Button text="Link" onAction="#handleLink">
-                    <tooltip><Tooltip text="Insertar enlace"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.link"/></tooltip>
                 </Button>
                 <Button text="Img" onAction="#handleImage">
-                    <tooltip><Tooltip text="Insertar imagen"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.image"/></tooltip>
                 </Button>
                 <Button text="HR" onAction="#handleHorizontalRule">
-                    <tooltip><Tooltip text="Regla horizontal"/></tooltip>
+                    <tooltip><Tooltip text="%tooltip.horizontalRule"/></tooltip>
                 </Button>
             </ToolBar>
         </VBox>
