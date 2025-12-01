@@ -32,7 +32,7 @@ application {
 
 javafx {
     version = "17.0.14"
-    modules = listOf("javafx.controls", "javafx.fxml", "javafx.web")
+    modules = listOf("javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing")
 }
 
 dependencies {
@@ -40,10 +40,6 @@ dependencies {
     implementation("org.commonmark:commonmark:0.21.0")
     implementation("com.gluonhq.emoji:emoji:1.1.0")
     implementation("com.gluonhq.emoji:offline:1.1.0") // añade sprites offline
-    // Google Drive base (sin servicio específico todavía)
-    implementation("com.google.api-client:google-api-client:2.6.0")
-    implementation("com.google.oauth-client:google-oauth-client-jetty:1.36.0")
-    implementation("com.google.http-client:google-http-client-jackson2:1.43.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

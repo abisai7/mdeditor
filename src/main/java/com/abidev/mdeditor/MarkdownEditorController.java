@@ -83,16 +83,17 @@ public class MarkdownEditorController {
 
     private void updatePreview(String markdown) {
         try {
-            // Reemplazar shortcodes con unicode usando GluonEmojiUtil (mejor cobertura)
             String withEmojis = GluonEmojiUtil.replaceShortcodesWithUnicode(markdown);
             var document = parser.parse(withEmojis);
             String html = renderer.render(document);
+            String htmlWithImages = EmojiToImageConverter.convertEmojisToImagesInHtml(html);
             String styledHtml = """
+                    <!DOCTYPE html>
                     <html>
                     <head>
-                        <meta charset='UTF-8'>
+                        <meta charset=\"UTF-8\">
                         <style>
-                            body {font-family: 'Segoe UI Emoji','OpenSansEmoji','Segoe UI','Noto Color Emoji','Apple Color Emoji','Twemoji Mozilla',sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;}
+                            body {font-family: 'Segoe UI','Arial',sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;}
                             h1, h2, h3, h4, h5, h6 {margin-top: 24px; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}
                             h1 { font-size: 2em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
                             h2 { font-size: 1.5em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
@@ -110,7 +111,7 @@ public class MarkdownEditorController {
                         </style>
                     </head>
                     <body>
-                    """ + html + """
+                    """ + htmlWithImages + """
                     </body>
                     </html>
                     """;
@@ -266,15 +267,22 @@ public class MarkdownEditorController {
         grid.setHgap(5); grid.setVgap(5);
         TextField search = new TextField();
         search.setPromptText(resources.getString("emoji.search.prompt"));
+        search.setPrefWidth(320);
+
         ScrollPane scroll = new ScrollPane();
         FlowPane flow = new FlowPane();
-        flow.setHgap(5); flow.setVgap(5);
-        flow.setPrefWrapLength(360);
+        flow.setHgap(3); flow.setVgap(3);
+        flow.setPrefWrapLength(320);
         scroll.setContent(flow);
         scroll.setFitToWidth(true);
+        scroll.setPrefSize(340, 280); // Tamaño compacto con scroll
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
         grid.add(search, 0, 0);
         grid.add(scroll, 0, 1);
         dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setPrefSize(380, 400);
 
         Runnable populate = () -> {
             flow.getChildren().clear();
@@ -282,10 +290,13 @@ public class MarkdownEditorController {
             var list = filter.isEmpty() ? EmojiData.getEmojiCollection() : EmojiData.search(filter);
             int count = 0;
             for (var emoji : list) {
-                if (count++ > 300) break; // limitar para performance
-                ImageView view = EmojiImageUtils.emojiView(emoji, 32);
+                if (count++ > 500) break; // más emojis disponibles con scroll
+                ImageView view = EmojiImageUtils.emojiView(emoji, 24); // tamaño reducido
                 Button b = new Button();
                 b.setGraphic(view);
+                b.setPrefSize(32, 32); // botones más compactos
+                b.setMinSize(32, 32);
+                b.setMaxSize(32, 32);
                 b.setTooltip(new Tooltip(":" + emoji.getShortName() + ":"));
                 b.setOnAction(e -> {
                     String unicode = toUnicode(emoji);

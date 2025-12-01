@@ -65,7 +65,7 @@ public class MDEditorApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         initEmojiLoader();
-        //loadEmojiFonts();
+        loadEmojiFonts();
 
         Locale locale = Locale.getDefault();
         ResourceBundle bundle = ResourceBundle.getBundle("com.abidev.mdeditor.messages", locale);
