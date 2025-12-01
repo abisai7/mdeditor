@@ -1,5 +1,6 @@
 package com.abidev.mdeditor;
 
+import atlantafx.base.theme.PrimerLight;
 import com.gluonhq.emoji.EmojiData;
 import com.gluonhq.emoji.EmojiSpriteLoader;
 import com.gluonhq.emoji.offline.LocalEmojiSpriteLoader;
@@ -62,8 +63,15 @@ public class MDEditorApplication extends Application {
         }
     }
 
+    private void initAtlantaFX() {
+        //Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        //Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
+        // Aplicar tema AtlantisFX correctamente
+        javafx.application.Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         initEmojiLoader();
         loadEmojiFonts();
 
@@ -74,7 +82,6 @@ public class MDEditorApplication extends Application {
         Scene scene = new Scene(root, 1200, 700);
         // Añadir Noto Color Emoji via Google Fonts y nuestro CSS local con fallback de fuentes
         List<String> stylesheets = List.of(
-                "https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap",
                 getClass().getResource("/com/abidev/mdeditor/styles.css").toExternalForm()
         );
         scene.getStylesheets().addAll(stylesheets);

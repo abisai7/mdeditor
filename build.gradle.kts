@@ -17,7 +17,7 @@ val junitVersion = "5.12.1"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -31,7 +31,7 @@ application {
 }
 
 javafx {
-    version = "17.0.14"
+    version = "23"
     modules = listOf("javafx.controls", "javafx.fxml", "javafx.web", "javafx.swing")
 }
 
@@ -40,6 +40,7 @@ dependencies {
     implementation("org.commonmark:commonmark:0.21.0")
     implementation("com.gluonhq.emoji:emoji:1.1.0")
     implementation("com.gluonhq.emoji:offline:1.1.0") // añade sprites offline
+    implementation("io.github.mkpaz:atlantafx-base:2.1.0") // AtlantisFX base
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
