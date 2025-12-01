@@ -1,0 +1,33 @@
+/* Estilos globales con soporte de emojis */
+.root {
+    -fx-font-family: "OpenSansEmoji", "Segoe UI Emoji", "Segoe UI", "Noto Color Emoji", "Apple Color Emoji", "Consolas", "Courier New", sans-serif;
+}
+
+.text-area {
+    -fx-font-family: "OpenSansEmoji", "Segoe UI Emoji", "Segoe UI", "Noto Color Emoji", "Apple Color Emoji", "Consolas", "Courier New", monospace;
+    -fx-font-size: 13px;
+}
+
+.text-area .content {
+    -fx-font-family: "OpenSansEmoji", "Segoe UI Emoji", "Segoe UI", "Noto Color Emoji", "Apple Color Emoji", "Consolas", "Courier New", monospace;
+}
+
+.button {
+    -fx-font-family: "OpenSansEmoji", "Segoe UI Emoji", "Segoe UI", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+}
+
+.label {
+    -fx-font-family: "OpenSansEmoji", "Segoe UI Emoji", "Segoe UI", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+}
+
+.choice-box {
+    -fx-font-family: "OpenSansEmoji", "Segoe UI Emoji", "Segoe UI", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+}
+
+/* Asegurar que botones de emojis se muestren correctamente */
+.button.emoji-button {
+    -fx-font-family: "OpenSansEmoji", "Segoe UI Emoji", "Segoe UI", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+    -fx-font-size: 18px;
+    -fx-padding: 2 6;
+}
+

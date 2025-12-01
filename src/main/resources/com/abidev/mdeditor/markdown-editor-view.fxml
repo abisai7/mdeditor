@@ -76,6 +76,9 @@
                 <Button text="HR" onAction="#handleHorizontalRule">
                     <tooltip><Tooltip text="%tooltip.horizontalRule"/></tooltip>
                 </Button>
+                <Button text="😀" onAction="#handleEmojiPicker" styleClass="emoji-button">
+                    <tooltip><Tooltip text="%tooltip.emojiPicker"/></tooltip>
+                </Button>
             </ToolBar>
         </VBox>
     </top>
@@ -84,8 +87,7 @@
             <items>
                 <VBox spacing="5">
                     <Label text="%label.editor" style="-fx-font-weight: bold; -fx-padding: 5;"/>
-                    <TextArea fx:id="markdownEditor" wrapText="true" VBox.vgrow="ALWAYS"
-                              style="-fx-font-family: 'Consolas', 'Courier New', monospace; -fx-font-size: 13px;"/>
+                    <TextArea fx:id="markdownEditor" wrapText="true" VBox.vgrow="ALWAYS"/>
                 </VBox>
                 <VBox spacing="5">
                     <Label text="%label.preview" style="-fx-font-weight: bold; -fx-padding: 5;"/>

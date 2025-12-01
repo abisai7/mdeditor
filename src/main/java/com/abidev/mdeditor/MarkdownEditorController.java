@@ -1,10 +1,14 @@
 package com.abidev.mdeditor;
 
+import com.gluonhq.emoji.EmojiData;
+import com.gluonhq.emoji.util.EmojiImageUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -17,6 +21,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.scene.layout.GridPane;
 
 public class MarkdownEditorController {
 
@@ -38,8 +43,15 @@ public class MarkdownEditorController {
     @FXML
     private ResourceBundle resources;
 
+
     @FXML
     public void initialize() {
+        // Inicializar fuente de emoji
+        EmojiFont.initialize();
+
+        // Aplicar fuente que soporte emojis al editor
+        markdownEditor.setFont(EmojiFont.getEmojiFont(13));
+
         // Actualizar la vista previa cuando el texto cambia
         markdownEditor.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!suppressHistory) {
@@ -71,18 +83,21 @@ public class MarkdownEditorController {
 
     private void updatePreview(String markdown) {
         try {
-            var document = parser.parse(markdown);
+            // Reemplazar shortcodes con unicode usando GluonEmojiUtil (mejor cobertura)
+            String withEmojis = GluonEmojiUtil.replaceShortcodesWithUnicode(markdown);
+            var document = parser.parse(withEmojis);
             String html = renderer.render(document);
             String styledHtml = """
                     <html>
                     <head>
+                        <meta charset='UTF-8'>
                         <style>
-                            body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;}
+                            body {font-family: 'Segoe UI Emoji','OpenSansEmoji','Segoe UI','Noto Color Emoji','Apple Color Emoji','Twemoji Mozilla',sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333;}
                             h1, h2, h3, h4, h5, h6 {margin-top: 24px; margin-bottom: 16px; font-weight: 600; line-height: 1.25;}
                             h1 { font-size: 2em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
                             h2 { font-size: 1.5em; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
                             h3 { font-size: 1.25em; }
-                            code { background-color: #f6f8fa; border-radius: 3px; padding: 0.2em 0.4em; font-family: 'Courier New', monospace; }
+                            code { background-color: #f6f8fa; border-radius: 3px; padding: 0.2em 0.4em; font-family: 'Consolas','Courier New',monospace; }
                             pre { background-color: #f6f8fa; border-radius: 3px; padding: 16px; overflow: auto; }
                             blockquote { border-left: 4px solid #dfe2e5; padding-left: 16px; color: #6a737d; }
                             ul, ol { padding-left: 2em; }
@@ -238,6 +253,60 @@ public class MarkdownEditorController {
     @FXML
     private void handleHorizontalRule() {
         wrapSelectionWithHistory("\n---\n", "");
+    }
+
+    @FXML private void handleEmojiPicker() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle(resources.getString("emoji.dialog.title"));
+        dialog.setHeaderText(resources.getString("emoji.dialog.header"));
+        ButtonType insertType = new ButtonType(resources.getString("emoji.button.insert"), ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(insertType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(5); grid.setVgap(5);
+        TextField search = new TextField();
+        search.setPromptText(resources.getString("emoji.search.prompt"));
+        ScrollPane scroll = new ScrollPane();
+        FlowPane flow = new FlowPane();
+        flow.setHgap(5); flow.setVgap(5);
+        flow.setPrefWrapLength(360);
+        scroll.setContent(flow);
+        scroll.setFitToWidth(true);
+        grid.add(search, 0, 0);
+        grid.add(scroll, 0, 1);
+        dialog.getDialogPane().setContent(grid);
+
+        Runnable populate = () -> {
+            flow.getChildren().clear();
+            String filter = search.getText().trim().toLowerCase();
+            var list = filter.isEmpty() ? EmojiData.getEmojiCollection() : EmojiData.search(filter);
+            int count = 0;
+            for (var emoji : list) {
+                if (count++ > 300) break; // limitar para performance
+                ImageView view = EmojiImageUtils.emojiView(emoji, 32);
+                Button b = new Button();
+                b.setGraphic(view);
+                b.setTooltip(new Tooltip(":" + emoji.getShortName() + ":"));
+                b.setOnAction(e -> {
+                    String unicode = toUnicode(emoji);
+                    dialog.setResult(unicode);
+                    dialog.close();
+                });
+                flow.getChildren().add(b);
+            }
+        };
+        populate.run();
+        search.textProperty().addListener((obs, o, n) -> populate.run());
+        search.setOnAction(e -> populate.run());
+
+        dialog.setResultConverter(bt -> bt == insertType ? null : null);
+        var result = dialog.showAndWait();
+        result.ifPresent(this::insertEmoji);
+    }
+
+    private void insertEmoji(String emoji) {
+        int pos = markdownEditor.getCaretPosition();
+        markdownEditor.insertText(pos, emoji);
     }
 
     private void wrapSelectionWithHistory(String before, String after) {
@@ -597,5 +666,20 @@ public class MarkdownEditorController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-}
 
+    private String toUnicode(com.gluonhq.emoji.Emoji emoji) {
+        // Intentar obtener unicode según API
+        var unicodeOpt = EmojiData.emojiForText(emoji.getShortName());
+        if (unicodeOpt.isPresent()) return unicodeOpt.get();
+        // Fallback: examinar textList buscando caracteres fuera BMP (surrogates)
+        for (String t : emoji.getTextList()) {
+            if (t.codePoints().anyMatch(cp -> cp > 0xFFFF)) {
+                return t; // ya es secuencia de emojis fuera BMP
+            }
+            // Algunos emojis están dentro BMP (por ejemplo ©) igualmente se retornan
+            if (!t.isEmpty()) return t;
+        }
+        // Último recurso: usar getText()
+        return emoji.getText();
+    }
+}
